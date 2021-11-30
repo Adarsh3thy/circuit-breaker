@@ -20,10 +20,12 @@ class CircuitBreaker(object):
         self.f = f
         print("CB initialised")
 
-    def __call__(self):
+    def __call__(self, arg):
         print("Entering", self.f.__name__)
-        self.f()
+        ret_val = self.f(arg)
+        print("Return value", ret_val)
         print("Exited", self.f.__name__)
+        return ret_val
 
     def on_failure():
         print("Check the CB for state change. close to open?")
@@ -51,12 +53,12 @@ class CircuitBreaker(object):
 Examples to test the decorator and CB
 """
 @CircuitBreaker
-def server_call():
+def server_call(path):
     print("process request on server()")
 
 @CircuitBreaker
 def server_call_2():
     print("process request on server_2()")
 
-server_call()
-server_call_2()
+server_call('aa')
+# server_call_2()
