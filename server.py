@@ -11,7 +11,7 @@ def index():
 def hello():
     return 'Hello on server!'
 
-@app.route('/get_response/<responseType>')
+@app.route('/get_response/<responseType>',methods=['GET','POST','DELETE'])
 def get_response(responseType):
     return 'Returning response', responseType
 

@@ -28,7 +28,7 @@ def proxy_request(path):
         response = Response(resp.content, resp.status_code, headers)
         return response
     elif request.method=='DELETE':
-        resp = requests.delete(f'{SITE_NAME}{path}').content
+        resp = requests.delete(f'{SITE_NAME}{path}')
         response = Response(resp.content, resp.status_code)
         return response
 
