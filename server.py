@@ -11,5 +11,9 @@ def index():
 def hello():
     return 'Hello on server!'
 
+@app.route('/get_response/<responseType>')
+def get_response(responseType):
+    return 'Returning response', responseType
+
 if __name__ == '__main__':
     app.run(debug = False,port=8080)
