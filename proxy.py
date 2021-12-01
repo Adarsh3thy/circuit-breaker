@@ -1,4 +1,6 @@
 from flask import Flask,request,redirect,Response
+from flask import json
+from flask.json import jsonify
 import requests
 from circuit_breaker import CircuitBreaker
 import redis
@@ -16,7 +18,15 @@ def index():
 
 @app.route('/checkCircuitBreakerHealth')
 def check_circuit_breaker_health():
-    return CircuitBreaker.print_health()
+    return json.dumps({
+        "_state":str(redis.get('_state')),
+        "_failure_count":str(redis.get('_failure_count')),
+        "_total_count":str(redis.get('_total_count')),
+        "_failure_window_time":str(redis.get('_failure_window_time')),
+        "_failure_window_start_time":str(redis.get('_failure_window_start_time')),
+        "_circuit_open_time":str(redis.get('_circuit_open_time')),
+        "_circuit_recovery_time":str(redis.get('_circuit_recovery_time'))
+    })
 
 @CircuitBreaker
 def proxy_request(path):
@@ -48,4 +58,4 @@ def proxy(path):
     return proxy_request(path)
 
 if __name__ == '__main__':
-    app.run(debug = False,port=82)
+    app.run(debug = False,port=1082)

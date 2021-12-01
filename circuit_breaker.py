@@ -65,6 +65,15 @@ class CircuitBreaker(object):
 
 
         print("Exited", self.f.__name__)
+
+        redis.set('_state', int(self._state._value_))
+        redis.set('_failure_count', self._failure_count)
+        redis.set('_total_count', self._total_count)
+        redis.set('_failure_window_time', str(self._failure_window_time))
+        redis.set('_failure_window_start_time', self._failure_window_start_time.strftime('%B %d %Y - %H:%M:%S'))
+        redis.set('_circuit_open_time', self._circuit_open_time.strftime('%B %d %Y - %H:%M:%S'))
+        redis.set('_circuit_recovery_time', self._circuit_recovery_time)
+
         return ret_val
 
     def on_failure(self):
