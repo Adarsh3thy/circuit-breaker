@@ -58,16 +58,9 @@ class CircuitBreaker(object):
         else:
             ret_val = self.f(arg)
             if (int(redis.get('status')) < 300):
-                if (self.check_state() == CIRCUIT_BREAKER_STATES.HALF_OPEN):
-                    self.close()
                 CircuitBreaker.on_success(self)
             else:
-                #print("failure")
-               # CircuitBreaker.on_failure(self)
-                if (self.check_state() == CIRCUIT_BREAKER_STATES.HALF_OPEN):
-                    self.open()
-                else:
-                    self.on_failure()
+                self.on_failure()
 
         print("Exited", self.f.__name__)
         return ret_val
