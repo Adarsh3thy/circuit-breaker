@@ -1,10 +1,14 @@
 from flask import Flask,request,redirect,Response
 import requests
 from circuit_breaker import CircuitBreaker
-
+import redis
 app = Flask(__name__)
 
 SITE_NAME = 'http://localhost:8080/'
+
+redis = redis.Redis(
+     host= 'localhost',
+     port= '6379')
 
 @app.route('/')
 def index():
@@ -12,7 +16,7 @@ def index():
 
 @app.route('/checkCircuitBreakerHealth')
 def check_circuit_breaker_health():
-    return CircuitBreaker.print_health(self)
+    return CircuitBreaker.print_health()
 
 @CircuitBreaker
 def proxy_request(path):
@@ -24,16 +28,19 @@ def proxy_request(path):
         excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
         headers = [(name, value) for (name, value) in  resp.raw.headers.items() if name.lower() not in excluded_headers]
         response = Response(resp.content, resp.status_code, headers)
+        redis.set('status',resp.status_code)
         return response
     elif request.method=='POST':
         resp = requests.post(f'{SITE_NAME}{path}',json=request.get_json())
         excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
         headers = [(name, value) for (name, value) in resp.raw.headers.items() if name.lower() not in excluded_headers]
         response = Response(resp.content, resp.status_code, headers)
+        redis.set('status', resp.status_code)
         return response
     elif request.method=='DELETE':
         resp = requests.delete(f'{SITE_NAME}{path}')
         response = Response(resp.content, resp.status_code)
+        redis.set('status', resp.status_code)
         return response
 
 @app.route('/<path:path>',methods=['GET','POST','DELETE'])

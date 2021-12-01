@@ -2,6 +2,15 @@ from enum import Enum
 from datetime import datetime, timedelta
 from flask import Response
 from flask.json import jsonify
+import logging
+import redis
+import sys
+
+logging.basicConfig(level=logging.INFO)
+
+redis = redis.Redis(
+     host= 'localhost',
+     port= '6379')
 
 class CIRCUIT_BREAKER_STATES(Enum):
     OPEN = 1
@@ -29,38 +38,37 @@ class CircuitBreaker(object):
         print("CB initialised")
 
     def __call__(self, arg):
-        print("Entering", self.f.__name__)
-        ret_val = self.f(arg)
-        self._total_count += 1
+        print("Entering ", self.f.__name__)
+        logging.info('Entering Circuit breaker')
 
-        #is_circuit_open 
-            #currTime < bufferTime+_circuit_open_time -> return 
-            #currTime > bufferTime+_circuit_open_time -> HALF_OPEN
+        print("Current State of CB {}",self.check_state())
 
-        #make request
-
-            #success 
-                #->close && return 
-            
-            #failure
-                #if half_open -> open -> reset
-                #else increment counters && check_for_open (threshold)
-
-
-
-
-        #is_circuit_open 
-            #currTime < bufferTime+_circuit_open_time -> return 
-            #currTime > bufferTime+_circuit_open_time -> HALF_OPEN
-
-        if(Response(ret_val).status_code == 200):
-            CircuitBreaker.on_success(self)
-            #->close && return (DONE)
+        if(self.check_state()==CIRCUIT_BREAKER_STATES.OPEN):
+            current_timelapse=datetime.utcnow() - self._circuit_open_time
+            print("Open state, time elapsed: {}",current_timelapse)
+            if(current_timelapse.total_seconds()<CircuitBreaker.RECOVERY_TIME):
+                ret_val=Response("The server is currently unavailable, please try after sometime",503)
+            else:
+                self.half_open()
+                ret_val = self.f(arg)
+                if (int(redis.get('status')) < 300):
+                    self.close()
+                else:
+                    self.open()
         else:
-            CircuitBreaker.on_failure(self)
-            #if half_open -> open -> reset
-            #else increment counters && check_for_open (DONE)
-        print("Return value", ret_val)
+            ret_val = self.f(arg)
+            if (int(redis.get('status')) < 300):
+                if (self.check_state() == CIRCUIT_BREAKER_STATES.HALF_OPEN):
+                    self.close()
+                CircuitBreaker.on_success(self)
+            else:
+                #print("failure")
+               # CircuitBreaker.on_failure(self)
+                if (self.check_state() == CIRCUIT_BREAKER_STATES.HALF_OPEN):
+                    self.open()
+                else:
+                    self.on_failure()
+
         print("Exited", self.f.__name__)
         return ret_val
 
@@ -68,14 +76,17 @@ class CircuitBreaker(object):
         self._failure_count += 1
 
         if (self._failure_window_start_time + self._failure_window_time) < datetime.utcnow():
-            self.reset_counters(self)
+            self.reset_counters()
+
+        print(self._failure_count)
 
         if self._failure_count >= self._failure_count_threshold:
-            open(self)
+            self.open()
 
     def reset_counters(self):
-        self._failure_count = 1
-        self._total_count = 1
+        print("Counters reset")
+        self._failure_count = 0
+        self._total_count = 0
         self._failure_window_start_time = datetime.utcnow()
 
     def on_success(self):
@@ -84,6 +95,7 @@ class CircuitBreaker(object):
     def open(self):
         self._state = CIRCUIT_BREAKER_STATES.OPEN
         self._circuit_open_time = datetime.utcnow()
+        self.reset_counters()
 
     def close(self):
         self._state = CIRCUIT_BREAKER_STATES.CLOSED
