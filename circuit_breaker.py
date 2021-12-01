@@ -1,5 +1,7 @@
 from enum import Enum
-from datetime import datetime
+from datetime import datetime, timedelta
+from flask import Response
+from flask.json import jsonify
 
 class CIRCUIT_BREAKER_STATES(Enum):
     OPEN = 1
@@ -8,6 +10,8 @@ class CIRCUIT_BREAKER_STATES(Enum):
 
 class CircuitBreaker(object):
     FAILURE_THRESHOLD_PERCENTAGE = 50 
+    RECOVERY_TIME = 30
+    FAILURE_WINDOW = 600
     EXCEPTION_TO_FAIL_FOR = Exception 
 
     def __init__(self, f, _failure_threshold_percentage=None,
@@ -15,26 +19,47 @@ class CircuitBreaker(object):
         self._failure_threshold_percentage = _failure_threshold_percentage or self.FAILURE_THRESHOLD_PERCENTAGE
         self._state = CIRCUIT_BREAKER_STATES.CLOSED
         self._failure_count = 0
+        self._total_count = 0
         self._exception_to_fail_for = exception_to_fail_for or self.EXCEPTION_TO_FAIL_FOR
-        self._failure_window_time = datetime.utcnow()
+        self._failure_window_time = timedelta(seconds=self.FAILURE_WINDOW)
+        self._failure_window_start_time = datetime.utcnow()
+        self._circuit_open_time = datetime.utcnow()
+        self._circuit_recovery_time = self.RECOVERY_TIME
         self.f = f
         print("CB initialised")
 
     def __call__(self, arg):
         print("Entering", self.f.__name__)
         ret_val = self.f(arg)
+        self._total_count += 1
+        if(Response(ret_val).status_code == 200):
+            CircuitBreaker.on_success(self)
+        else:
+            CircuitBreaker.on_failure(self)
         print("Return value", ret_val)
         print("Exited", self.f.__name__)
         return ret_val
 
-    def on_failure():
-        print("Check the CB for state change. close to open?")
+    def on_failure(self):
+        self._failure_count += 1
 
-    def on_success():
-        print("Check the CB for state change. open to close?")
+        if (self._failure_window_start_time + self._failure_window_time) < datetime.utcnow():
+            reset_counters(self)
+
+        if (self._failure_count/self._total_count)*100 >= self._failure_threshold_percentage:
+            open(self)
+
+    def reset_counters(self):
+        self._failure_count = 1
+        self._total_count = 1
+        self._failure_window_start_time = datetime.utcnow()
+
+    def on_success(self):
+        self._state = CIRCUIT_BREAKER_STATES.CLOSED
 
     def open(self):
         self._state = CIRCUIT_BREAKER_STATES.OPEN
+        self._circuit_open_time = datetime.utcnow()
 
     def close(self):
         self._state = CIRCUIT_BREAKER_STATES.CLOSED
@@ -45,9 +70,9 @@ class CircuitBreaker(object):
     def check_state(self):
         return self._state
 
-    def close_time():
+    def close_time(self):
         print("Not sure what to put")
-
+        return self._circuit_open_time + timedelta(seconds = self._circuit_recovery_time)
 
 """
 Examples to test the decorator and CB
