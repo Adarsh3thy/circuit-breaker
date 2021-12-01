@@ -35,6 +35,7 @@ class CircuitBreaker(object):
         self._circuit_open_time = datetime.utcnow()
         self._circuit_recovery_time = self.RECOVERY_TIME
         self.f = f
+        self.push_circuit_breaker_to_redis()
         print("CB initialised")
 
     def __call__(self, arg):
@@ -42,7 +43,7 @@ class CircuitBreaker(object):
         logging.info('Entering Circuit breaker')
 
         print("Current State of CB {}",self.check_state())
-
+        self._total_count += 1
         if(self.check_state()==CIRCUIT_BREAKER_STATES.OPEN):
             current_timelapse=datetime.utcnow() - self._circuit_open_time
             print("Open state, time elapsed: {}",current_timelapse)
@@ -63,9 +64,13 @@ class CircuitBreaker(object):
                 print("failure")
                 CircuitBreaker.on_failure(self)
 
-
+        self.push_circuit_breaker_to_redis()
+        
         print("Exited", self.f.__name__)
+        return ret_val
 
+
+    def push_circuit_breaker_to_redis(self):
         redis.set('_state', int(self._state._value_))
         redis.set('_failure_count', self._failure_count)
         redis.set('_total_count', self._total_count)
@@ -73,8 +78,6 @@ class CircuitBreaker(object):
         redis.set('_failure_window_start_time', self._failure_window_start_time.strftime('%B %d %Y - %H:%M:%S'))
         redis.set('_circuit_open_time', self._circuit_open_time.strftime('%B %d %Y - %H:%M:%S'))
         redis.set('_circuit_recovery_time', self._circuit_recovery_time)
-
-        return ret_val
 
     def on_failure(self):
         self._failure_count += 1

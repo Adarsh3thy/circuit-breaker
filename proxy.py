@@ -28,6 +28,14 @@ def check_circuit_breaker_health():
         "_circuit_recovery_time":str(redis.get('_circuit_recovery_time'))
     })
 
+@app.route('/resetCircuitBreaker')
+def reset_circuit_breaker():
+    CircuitBreaker("reset")
+    return json.dumps({"status": "Success"})
+
+def reset():
+    return 
+
 @CircuitBreaker
 def proxy_request(path):
     print("process request on server()")
