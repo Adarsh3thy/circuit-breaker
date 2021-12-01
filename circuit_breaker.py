@@ -60,7 +60,9 @@ class CircuitBreaker(object):
             if (int(redis.get('status')) < 300):
                 CircuitBreaker.on_success(self)
             else:
-                self.on_failure()
+                print("failure")
+                CircuitBreaker.on_failure(self)
+
 
         print("Exited", self.f.__name__)
         return ret_val
