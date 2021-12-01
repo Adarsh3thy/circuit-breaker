@@ -32,10 +32,34 @@ class CircuitBreaker(object):
         print("Entering", self.f.__name__)
         ret_val = self.f(arg)
         self._total_count += 1
+
+        #is_circuit_open 
+            #currTime < bufferTime+_circuit_open_time -> return 
+            #currTime > bufferTime+_circuit_open_time -> HALF_OPEN
+
+        #make request
+
+            #success 
+                #->close && return 
+            
+            #failure
+                #if half_open -> open -> reset
+                #else increment counters && check_for_open (threshold)
+
+
+
+
+        #is_circuit_open 
+            #currTime < bufferTime+_circuit_open_time -> return 
+            #currTime > bufferTime+_circuit_open_time -> HALF_OPEN
+
         if(Response(ret_val).status_code == 200):
             CircuitBreaker.on_success(self)
+            #->close && return (DONE)
         else:
             CircuitBreaker.on_failure(self)
+            #if half_open -> open -> reset
+            #else increment counters && check_for_open (DONE)
         print("Return value", ret_val)
         print("Exited", self.f.__name__)
         return ret_val
