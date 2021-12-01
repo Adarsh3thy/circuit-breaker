@@ -9,14 +9,14 @@ class CIRCUIT_BREAKER_STATES(Enum):
     HALF_OPEN = 3
 
 class CircuitBreaker(object):
-    FAILURE_THRESHOLD_PERCENTAGE = 50 
+    FAILURE_COUNT_THRESHOLD = 3
     RECOVERY_TIME = 30
     FAILURE_WINDOW = 600
     EXCEPTION_TO_FAIL_FOR = Exception 
 
-    def __init__(self, f, _failure_threshold_percentage=None,
-                exception_to_fail_for=None):
-        self._failure_threshold_percentage = _failure_threshold_percentage or self.FAILURE_THRESHOLD_PERCENTAGE
+    def __init__(self, f, _failure_count_threshold=None,
+                 exception_to_fail_for=None):
+        self._failure_count_threshold = _failure_count_threshold or self.FAILURE_COUNT_THRESHOLD
         self._state = CIRCUIT_BREAKER_STATES.CLOSED
         self._failure_count = 0
         self._total_count = 0
@@ -68,9 +68,9 @@ class CircuitBreaker(object):
         self._failure_count += 1
 
         if (self._failure_window_start_time + self._failure_window_time) < datetime.utcnow():
-            reset_counters(self)
+            self.reset_counters(self)
 
-        if (self._failure_count/self._total_count)*100 >= self._failure_threshold_percentage:
+        if self._failure_count >= self._failure_count_threshold:
             open(self)
 
     def reset_counters(self):
