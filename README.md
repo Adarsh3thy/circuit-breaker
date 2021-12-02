@@ -6,7 +6,7 @@
 - Test server by going to URL `localhost:8080`
 - If you are able to access, it means server is up.
 
-## maunal_proxy.py
+## proxy.py
 
 - Start proxy by running command `python3 proxy.py` in a terminal 
 - Test proxy by going to URL `localhost:1082`
