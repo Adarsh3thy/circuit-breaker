@@ -50,13 +50,17 @@ class CircuitBreaker(object):
             else:
                 self.half_open()
                 ret_val = self.f(arg)
-                if (int(redis.get('status')) < 300):
+                if(ret_val):
+                    print("Response status: ", ret_val.status_code)
+                if (ret_val and ret_val.status_code < 300):
                     self.close()
                 else:
                     self.open()
         else:
             ret_val = self.f(arg)
-            if (int(redis.get('status')) < 300):
+            if(ret_val):
+                print("Response status: ", ret_val.status_code)
+            if (ret_val and ret_val.status_code < 300):
                 CircuitBreaker.on_success(self)
             else:
                 print("failure")
