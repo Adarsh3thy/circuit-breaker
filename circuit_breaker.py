@@ -20,7 +20,7 @@ class CIRCUIT_BREAKER_STATES(Enum):
 class CircuitBreaker(object):
     FAILURE_COUNT_THRESHOLD = 3
     RECOVERY_TIME = 30
-    FAILURE_WINDOW = 600
+    FAILURE_WINDOW = 120
     EXCEPTION_TO_FAIL_FOR = Exception
 
     def __init__(self, f, _failure_count_threshold=None,
@@ -37,6 +37,15 @@ class CircuitBreaker(object):
         self.push_circuit_breaker_to_redis()
         print("Circuit Breaker initialised")
 
+    def get_status(self,arg):
+        ret_val = None
+        try:
+            ret_val = self.f(arg)
+        except Exception as e:
+            ret_val = Response('proxy message: Server is taking longer to respond', 408)
+            print(e)
+        return ret_val
+
     def __call__(self, arg):
         print("Entering ", self.f.__name__)
         logging.info('Entering Circuit breaker')
@@ -50,7 +59,7 @@ class CircuitBreaker(object):
                 ret_val = Response("The server is currently unavailable, please try after sometime", 503)
             else:
                 self.half_open()
-                ret_val = self.f(arg)
+                ret_val= self.get_status(arg)
                 if ret_val:
                     print("Response status: ", ret_val.status_code)
                 if ret_val and ret_val.status_code < 300:
@@ -58,7 +67,7 @@ class CircuitBreaker(object):
                 else:
                     self.open()
         else:
-            ret_val = self.f(arg)
+            ret_val = self.get_status(arg)
             if ret_val:
                 print("Response status: ", ret_val.status_code)
             if ret_val and ret_val.status_code < 300:
