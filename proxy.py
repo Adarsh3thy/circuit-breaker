@@ -21,14 +21,13 @@ def check_circuit_breaker_health():
     return json.dumps({
         "_state":str(redis.get('_state')),
         "_failure_count":str(redis.get('_failure_count')),
-        "_total_count":str(redis.get('_total_count')),
         "_failure_window_time":str(redis.get('_failure_window_time')),
         "_failure_window_start_time":str(redis.get('_failure_window_start_time')),
         "_circuit_open_time":str(redis.get('_circuit_open_time')),
         "_circuit_recovery_time":str(redis.get('_circuit_recovery_time'))
     })
 
-@app.route('/resetCircuitBreaker')
+@app.route('/resetCircuitBreaker',methods=['POST'])
 def reset_circuit_breaker():
     CircuitBreaker("reset")
     return json.dumps({"status": "Success"})

@@ -28,7 +28,6 @@ class CircuitBreaker(object):
         self._failure_count_threshold = _failure_count_threshold or self.FAILURE_COUNT_THRESHOLD
         self._state = CIRCUIT_BREAKER_STATES.CLOSED
         self._failure_count = 0
-        self._total_count = 0
         self._exception_to_fail_for = exception_to_fail_for or self.EXCEPTION_TO_FAIL_FOR
         self._failure_window_time = timedelta(seconds=self.FAILURE_WINDOW)
         self._failure_window_start_time = datetime.utcnow()
@@ -43,7 +42,6 @@ class CircuitBreaker(object):
         logging.info('Entering Circuit breaker')
 
         print("Current State of CB {}",self.check_state())
-        self._total_count += 1
         if(self.check_state()==CIRCUIT_BREAKER_STATES.OPEN):
             current_timelapse=datetime.utcnow() - self._circuit_open_time
             print("Open state, time elapsed: {}",current_timelapse)
@@ -73,7 +71,6 @@ class CircuitBreaker(object):
     def push_circuit_breaker_to_redis(self):
         redis.set('_state', int(self._state._value_))
         redis.set('_failure_count', self._failure_count)
-        redis.set('_total_count', self._total_count)
         redis.set('_failure_window_time', str(self._failure_window_time))
         redis.set('_failure_window_start_time', self._failure_window_start_time.strftime('%B %d %Y - %H:%M:%S'))
         redis.set('_circuit_open_time', self._circuit_open_time.strftime('%B %d %Y - %H:%M:%S'))
@@ -93,7 +90,6 @@ class CircuitBreaker(object):
     def reset_counters(self):
         print("Counters reset")
         self._failure_count = 0
-        self._total_count = 0
         self._failure_window_start_time = datetime.utcnow()
 
     def on_success(self):
