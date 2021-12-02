@@ -10,6 +10,12 @@ def print_circuit_breaker_health(log):
     print(log + ":-")
     print(data)
 
+def move_circuit_breaker_to_open():
+    response = requests.get(SERVER_URL+"/get_response/500")
+    response = requests.get(SERVER_URL+"/get_response/500")
+    response = requests.get(SERVER_URL+"/get_response/500")
+    response = requests.get(SERVER_URL+"/get_response/500")
+
 
 print("----------------------------------------------")
 print("Test Case 1: Close to Close")
@@ -49,11 +55,8 @@ response = requests.post(SERVER_URL+"/resetCircuitBreaker")
 
 print("----------------------------------------------")
 print("Test Case 3: Open to Half-Open to Open (After Time Period)")
-response = requests.get(SERVER_URL+"/get_response/500")
-response = requests.get(SERVER_URL+"/get_response/500")
-response = requests.get(SERVER_URL+"/get_response/500")
-response = requests.get(SERVER_URL+"/get_response/500")
 
+move_circuit_breaker_to_open()
 print_circuit_breaker_health("Start")
 
 time.sleep(35)
@@ -66,11 +69,8 @@ response = requests.post(SERVER_URL+"/resetCircuitBreaker")
 
 print("----------------------------------------------")
 print("Test Case 4: Open to Half-Open to Close (After Time Period)")
-response = requests.get(SERVER_URL+"/get_response/500")
-response = requests.get(SERVER_URL+"/get_response/500")
-response = requests.get(SERVER_URL+"/get_response/500")
-response = requests.get(SERVER_URL+"/get_response/500")
 
+move_circuit_breaker_to_open()
 print_circuit_breaker_health("Start")
 
 time.sleep(35)
@@ -86,11 +86,8 @@ response = requests.post(SERVER_URL+"/resetCircuitBreaker")
 
 print("----------------------------------------------")
 print("Test Case 5: Open to Open")
-response = requests.get(SERVER_URL+"/get_response/500")
-response = requests.get(SERVER_URL+"/get_response/500")
-response = requests.get(SERVER_URL+"/get_response/500")
-response = requests.get(SERVER_URL+"/get_response/500")
 
+move_circuit_breaker_to_open()
 print_circuit_breaker_health("Start")
 
 response = requests.get(SERVER_URL+"/get_response/500")
