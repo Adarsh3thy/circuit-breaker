@@ -134,8 +134,25 @@ requests.get(SERVER_URL+"/timeout")
 print_circuit_breaker_health("End")
 requests.post(SERVER_URL+"/resetCircuitBreaker")
 
+
 print("----------------------------------------------")
-print("Test Case 9: Open to Half-Open to Close (After Time Period) with TIMEOUT")
+print("Test Case 9: Open to Open with TIMEOUT")
+
+move_circuit_breaker_to_open()
+print_circuit_breaker_health("Start")
+
+requests.get(SERVER_URL+"/timeout")
+requests.get(SERVER_URL+"/timeout")
+requests.get(SERVER_URL+"/timeout")
+requests.get(SERVER_URL+"/timeout")
+requests.get(SERVER_URL+"/timeout")
+
+print_circuit_breaker_health("End")
+requests.post(SERVER_URL+"/resetCircuitBreaker")
+
+
+print("----------------------------------------------")
+print("Test Case 10: Open to Half-Open to Close (After Time Period) with TIMEOUT")
 
 move_circuit_breaker_to_open()
 print_circuit_breaker_health("Start")
@@ -149,18 +166,5 @@ print_circuit_breaker_health("End")
 requests.post(SERVER_URL+"/resetCircuitBreaker")
 
 
-print("----------------------------------------------")
-print("Test Case 10: Open to Open with TIMEOUT")
 
-move_circuit_breaker_to_open()
-print_circuit_breaker_health("Start")
-
-requests.get(SERVER_URL+"/timeout")
-requests.get(SERVER_URL+"/timeout")
-requests.get(SERVER_URL+"/timeout")
-requests.get(SERVER_URL+"/timeout")
-requests.get(SERVER_URL+"/timeout")
-
-print_circuit_breaker_health("End")
-requests.post(SERVER_URL+"/resetCircuitBreaker")
 
