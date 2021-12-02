@@ -11,46 +11,46 @@ def print_circuit_breaker_health(log):
     print(data)
 
 def move_circuit_breaker_to_open():
-    response = requests.get(SERVER_URL+"/get_response/500")
-    response = requests.get(SERVER_URL+"/get_response/500")
-    response = requests.get(SERVER_URL+"/get_response/500")
-    response = requests.get(SERVER_URL+"/get_response/500")
+    requests.get(SERVER_URL+"/get_response/500")
+    requests.get(SERVER_URL+"/get_response/500")
+    requests.get(SERVER_URL+"/get_response/500")
+    requests.get(SERVER_URL+"/get_response/500")
 
 
 print("----------------------------------------------")
 print("Test Case 1: Close to Close")
 print_circuit_breaker_health("Start")
 
-response = requests.get(SERVER_URL+"/get_response/200")
-response = requests.get(SERVER_URL+"/get_response/200")
-response = requests.get(SERVER_URL+"/get_response/200")
-response = requests.get(SERVER_URL+"/get_response/200")
-response = requests.get(SERVER_URL+"/get_response/200")
-response = requests.get(SERVER_URL+"/get_response/200")
-response = requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
 
 print_circuit_breaker_health("End")
-response = requests.post(SERVER_URL+"/resetCircuitBreaker")
+requests.post(SERVER_URL+"/resetCircuitBreaker")
 
 
 print("----------------------------------------------")
 print("Test Case 2: Close to Open")
 print_circuit_breaker_health("Start")
 
-response = requests.get(SERVER_URL+"/get_response/200")
-response = requests.get(SERVER_URL+"/get_response/200")
-response = requests.get(SERVER_URL+"/get_response/200")
-response = requests.get(SERVER_URL+"/get_response/200")
-response = requests.get(SERVER_URL+"/get_response/200")
-response = requests.get(SERVER_URL+"/get_response/200")
-response = requests.get(SERVER_URL+"/get_response/200")
-response = requests.get(SERVER_URL+"/get_response/500")
-response = requests.get(SERVER_URL+"/get_response/500")
-response = requests.get(SERVER_URL+"/get_response/500")
-response = requests.get(SERVER_URL+"/get_response/500")
+requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/500")
+requests.get(SERVER_URL+"/get_response/500")
+requests.get(SERVER_URL+"/get_response/500")
+requests.get(SERVER_URL+"/get_response/500")
 
 print_circuit_breaker_health("End")
-response = requests.post(SERVER_URL+"/resetCircuitBreaker")
+requests.post(SERVER_URL+"/resetCircuitBreaker")
 
 
 print("----------------------------------------------")
@@ -61,10 +61,10 @@ print_circuit_breaker_health("Start")
 
 time.sleep(35)
 
-response = requests.get(SERVER_URL+"/get_response/500")
+requests.get(SERVER_URL+"/get_response/500")
 
 print_circuit_breaker_health("End")
-response = requests.post(SERVER_URL+"/resetCircuitBreaker")
+requests.post(SERVER_URL+"/resetCircuitBreaker")
 
 
 print("----------------------------------------------")
@@ -75,13 +75,13 @@ print_circuit_breaker_health("Start")
 
 time.sleep(35)
 
-response = requests.get(SERVER_URL+"/get_response/200")
+requests.get(SERVER_URL+"/get_response/200")
 
-response = requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
+requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
 data = response.json()
 print("End: ")
 print(data)
-response = requests.post(SERVER_URL+"/resetCircuitBreaker")
+requests.post(SERVER_URL+"/resetCircuitBreaker")
 
 
 print("----------------------------------------------")
@@ -90,10 +90,10 @@ print("Test Case 5: Open to Open")
 move_circuit_breaker_to_open()
 print_circuit_breaker_health("Start")
 
-response = requests.get(SERVER_URL+"/get_response/500")
+requests.get(SERVER_URL+"/get_response/500")
 
-response = requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
+requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
 data = response.json()
 print("End: ")
 print(data)
-response = requests.post(SERVER_URL+"/resetCircuitBreaker")
+requests.post(SERVER_URL+"/resetCircuitBreaker")
