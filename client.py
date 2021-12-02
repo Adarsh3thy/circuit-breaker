@@ -77,10 +77,7 @@ time.sleep(35)
 
 requests.get(SERVER_URL+"/get_response/200")
 
-requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
-data = response.json()
-print("End: ")
-print(data)
+print_circuit_breaker_health("End")
 requests.post(SERVER_URL+"/resetCircuitBreaker")
 
 
@@ -92,8 +89,5 @@ print_circuit_breaker_health("Start")
 
 requests.get(SERVER_URL+"/get_response/500")
 
-requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
-data = response.json()
-print("End: ")
-print(data)
+print_circuit_breaker_health("End")
 requests.post(SERVER_URL+"/resetCircuitBreaker")
