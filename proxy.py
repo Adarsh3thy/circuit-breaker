@@ -8,9 +8,9 @@ app = Flask(__name__)
 
 SITE_NAME = 'http://localhost:8080/'
 
-redis = redis.Redis(
+redis = redis.StrictRedis(
      host= 'localhost',
-     port= '6379')
+     port= '6379',decode_responses=True)
 
 @app.route('/')
 def index():
