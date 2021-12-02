@@ -3,12 +3,17 @@ import time
 
 SERVER_URL = "http://localhost:1082"
 
+
+def print_circuit_breaker_health(log):
+    response = requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
+    data = response.json()
+    print(log + ":-")
+    print(data)
+
+
 print("----------------------------------------------")
 print("Test Case 1: Close to Close")
-response = requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
-data = response.json()
-print("Start: ")
-print(data)
+print_circuit_breaker_health("Start")
 
 response = requests.get(SERVER_URL+"/get_response/200")
 response = requests.get(SERVER_URL+"/get_response/200")
@@ -18,19 +23,13 @@ response = requests.get(SERVER_URL+"/get_response/200")
 response = requests.get(SERVER_URL+"/get_response/200")
 response = requests.get(SERVER_URL+"/get_response/200")
 
-response = requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
-data = response.json()
-print("End: ")
-print(data)
+print_circuit_breaker_health("End")
 response = requests.post(SERVER_URL+"/resetCircuitBreaker")
 
 
 print("----------------------------------------------")
 print("Test Case 2: Close to Open")
-response = requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
-data = response.json()
-print("Start: ")
-print(data)
+print_circuit_breaker_health("Start")
 
 response = requests.get(SERVER_URL+"/get_response/200")
 response = requests.get(SERVER_URL+"/get_response/200")
@@ -44,10 +43,7 @@ response = requests.get(SERVER_URL+"/get_response/500")
 response = requests.get(SERVER_URL+"/get_response/500")
 response = requests.get(SERVER_URL+"/get_response/500")
 
-response = requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
-data = response.json()
-print("End: ")
-print(data)
+print_circuit_breaker_health("End")
 response = requests.post(SERVER_URL+"/resetCircuitBreaker")
 
 
@@ -58,19 +54,13 @@ response = requests.get(SERVER_URL+"/get_response/500")
 response = requests.get(SERVER_URL+"/get_response/500")
 response = requests.get(SERVER_URL+"/get_response/500")
 
-response = requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
-data = response.json()
-print("Start: ")
-print(data)
+print_circuit_breaker_health("Start")
 
 time.sleep(35)
 
 response = requests.get(SERVER_URL+"/get_response/500")
 
-response = requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
-data = response.json()
-print("End: ")
-print(data)
+print_circuit_breaker_health("End")
 response = requests.post(SERVER_URL+"/resetCircuitBreaker")
 
 
@@ -81,10 +71,7 @@ response = requests.get(SERVER_URL+"/get_response/500")
 response = requests.get(SERVER_URL+"/get_response/500")
 response = requests.get(SERVER_URL+"/get_response/500")
 
-response = requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
-data = response.json()
-print("Start: ")
-print(data)
+print_circuit_breaker_health("Start")
 
 time.sleep(35)
 
@@ -104,10 +91,7 @@ response = requests.get(SERVER_URL+"/get_response/500")
 response = requests.get(SERVER_URL+"/get_response/500")
 response = requests.get(SERVER_URL+"/get_response/500")
 
-response = requests.get(SERVER_URL+"/checkCircuitBreakerHealth")
-data = response.json()
-print("Start: ")
-print(data)
+print_circuit_breaker_health("Start")
 
 response = requests.get(SERVER_URL+"/get_response/500")
 
