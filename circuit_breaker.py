@@ -52,7 +52,7 @@ class CircuitBreaker(object):
                 ret_val = self.f(arg)
                 if(ret_val):
                     print("Response status: ", ret_val.status_code)
-                if (ret_val and int(ret_val.status_code) < 300):
+                if (ret_val and ret_val.status_code < 300):
                     self.close()
                 else:
                     self.open()
@@ -60,7 +60,7 @@ class CircuitBreaker(object):
             ret_val = self.f(arg)
             if(ret_val):
                 print("Response status: ", ret_val.status_code)
-            if (ret_val and int(ret_val.status_code) < 300):
+            if (ret_val and ret_val.status_code < 300):
                 CircuitBreaker.on_success(self)
             else:
                 print("failure")
