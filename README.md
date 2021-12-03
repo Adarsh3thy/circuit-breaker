@@ -1,5 +1,7 @@
 # circuit-breaker
 
+![Architecture](https://github.com/sandeshgupta/circuit-breaker/blob/main/Circuit%20Breaker%20Flow.jpg)
+
 ## server.py
 
 - Start server by running command `python3 server.py` in a terminal
