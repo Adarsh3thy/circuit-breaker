@@ -17,6 +17,7 @@ def move_circuit_breaker_to_open():
     requests.get(SERVER_URL+"/get_response/500")
     requests.get(SERVER_URL+"/get_response/500")
 
+string = input("Test Case 1: Close to Close? (Yes)")
 
 print("----------------------------------------------")
 print("Test Case 1: Close to Close")
@@ -33,6 +34,7 @@ requests.get(SERVER_URL+"/get_response/200")
 print_circuit_breaker_health("End")
 requests.post(SERVER_URL+"/resetCircuitBreaker")
 
+string = input("Test Case 2: Close to Open?")
 
 print("----------------------------------------------")
 print("Test Case 2: Close to Open")
@@ -53,6 +55,7 @@ requests.get(SERVER_URL+"/get_response/500")
 print_circuit_breaker_health("End")
 requests.post(SERVER_URL+"/resetCircuitBreaker")
 
+string = input("Test Case 3: Open to Half-Open to Open (After Time Period)?")
 
 print("----------------------------------------------")
 print("Test Case 3: Open to Half-Open to Open (After Time Period)")
@@ -67,6 +70,7 @@ requests.get(SERVER_URL+"/get_response/500")
 print_circuit_breaker_health("End")
 requests.post(SERVER_URL+"/resetCircuitBreaker")
 
+string = input("Test Case 4: Open to Half-Open to Close (After Time Period)?")
 
 print("----------------------------------------------")
 print("Test Case 4: Open to Half-Open to Close (After Time Period)")
@@ -81,6 +85,7 @@ requests.get(SERVER_URL+"/get_response/200")
 print_circuit_breaker_health("End")
 requests.post(SERVER_URL+"/resetCircuitBreaker")
 
+string = input("Test Case 5: Open to Open?")
 
 print("----------------------------------------------")
 print("Test Case 5: Open to Open")
@@ -93,6 +98,7 @@ requests.get(SERVER_URL+"/get_response/500")
 print_circuit_breaker_health("End")
 requests.post(SERVER_URL+"/resetCircuitBreaker")
 
+string = input("Test Case 6: Close to Close with TIMEOUT?")
 
 print("----------------------------------------------")
 print("Test Case 6: Close to Close with TIMEOUT")
@@ -106,6 +112,7 @@ requests.get(SERVER_URL+"/timeout")
 print_circuit_breaker_health("End")
 requests.post(SERVER_URL+"/resetCircuitBreaker")
 
+string = input("Test Case 7: Close to Open when TIMEOUT?")
 
 print("----------------------------------------------")
 print("Test Case 7: Close to Open when TIMEOUT")
@@ -122,6 +129,7 @@ requests.get(SERVER_URL+"/timeout")
 print_circuit_breaker_health("End")
 requests.post(SERVER_URL+"/resetCircuitBreaker")
 
+string = input("Test Case 8: Open to HalfOpen to Open (After Time Period) when TIMEOUT?")
 
 print("----------------------------------------------")
 print("Test Case 8: Open to HalfOpen to Open (After Time Period) when TIMEOUT")
@@ -134,6 +142,7 @@ requests.get(SERVER_URL+"/timeout")
 print_circuit_breaker_health("End")
 requests.post(SERVER_URL+"/resetCircuitBreaker")
 
+string = input("Test Case 9: Open to Open with TIMEOUT?")
 
 print("----------------------------------------------")
 print("Test Case 9: Open to Open with TIMEOUT")
