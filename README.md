@@ -1,4 +1,9 @@
-# circuit-breaker
+# circuit-breaker 
+Team : 
+Adarsh Narasimha Murthy - 
+Anuhya Gankidi - 015897323
+Rooppesh Sarankapani - 
+Sandesh Gupta - 
 
 ![Architecture](https://github.com/sandeshgupta/circuit-breaker/blob/main/Circuit%20Breaker%20Flow.jpg)
 
