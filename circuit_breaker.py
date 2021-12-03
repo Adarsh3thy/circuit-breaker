@@ -128,6 +128,7 @@ class CircuitBreaker(object):
     def close(self):
         self._state = CIRCUIT_BREAKER_STATES.CLOSED
         redis.set('_state', int(self._state._value_))
+        self.reset_counters()
 
     def half_open(self):
         self._state = CIRCUIT_BREAKER_STATES.HALF_OPEN
