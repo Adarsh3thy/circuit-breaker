@@ -1,4 +1,11 @@
-# circuit-breaker
+# circuit-breaker 
+
+Team :- <br />
+Adarsh Narasimha Murthy - 014952275 <br />
+Anuhya Gankidi - 015897323 <br />
+Rooppesh Sarankapani - 015253147 <br />
+Sandesh Gupta - 015649036 <br />
+
 
 ![Architecture](https://github.com/sandeshgupta/circuit-breaker/blob/main/Circuit%20Breaker%20Flow.jpg)
 
