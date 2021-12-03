@@ -2,7 +2,7 @@ from flask import Flask,request,redirect,Response
 from flask import json
 from flask.json import jsonify
 import requests
-from circuit_breaker import CircuitBreaker
+from circuit_breaker import CircuitBreaker,CIRCUIT_BREAKER_STATES
 import redis
 app = Flask(__name__)
 
@@ -20,7 +20,7 @@ def index():
 @app.route('/checkCircuitBreakerHealth')
 def check_circuit_breaker_health():
     return json.dumps({
-        "_state":str(redis.get('_state')),
+        "_state":CIRCUIT_BREAKER_STATES(int(redis.get('_state'))).name,
         "_failure_count":str(redis.get('_failure_count')),
         "_failure_window_time":str(redis.get('_failure_window_time')),
         "_failure_window_start_time":str(redis.get('_failure_window_start_time')),
